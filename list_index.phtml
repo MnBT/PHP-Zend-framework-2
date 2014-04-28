@@ -1,0 +1,104 @@
+<h3>Пользователи</h3> <a href="/user/logout">Выход</a><br /><br />
+
+<a class="btn btn-lg btn-success" href="/user/add">Создать нового пользователя</a><br /><br />
+
+
+<style>
+body {
+	overflow-x: hidden;
+}
+input {
+	width: 105px !important;
+}
+</style>
+
+<?php
+if (count($this->paginator)): ?>
+<div id="search_result">
+<table  class="table table-bordered table-hover table-users">
+	<tr>
+		<th style="width: 125px;">Email</th>
+		<th style="width: 125px;">Фамилия</th>
+		<th style="width: 125px;">Имя</th>
+		<th style="width: 125px;">Логин</th>
+		<th style="width: 125px;">ID</th>
+		<th style="width: 70px;">Вкл/Выкл</th>
+		<th style="width: 125px;">Управление</th>
+		<th style="width: 125px;">Управление</th>
+		<th style="width: 125px;">Группы</th>
+	</tr>
+	<tr>
+		<form action="" class='search'>
+		<td><input type="text" name="search_email" placeholder="Поиск по Email" value="<?php echo htmlspecialchars($this->params()->fromQuery('search_email')); ?>"/></td>
+		<td><input type="text" id="lastname" name="search_lastname" placeholder="Поиск по фамилии" value="<?php echo htmlspecialchars($this->params()->fromQuery('search_lastname')); ?>"/></td>
+		<td><input type="text" name="search_firstname" placeholder="Поиск по имени" value="<?php echo htmlspecialchars($this->params()->fromQuery('search_firstname')); ?>"/></td>
+		<td><input type="text" name="search_login" placeholder="Поиск по логину" value="<?php echo htmlspecialchars($this->params()->fromQuery('search_login')); ?>"/></td>
+		<td><input type="text" name="search_id" placeholder="Поиск по ID" value="<?php echo htmlspecialchars($this->params()->fromQuery('search_id')); ?>"/></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td><input type="text" name="search_group" placeholder="Поиск по группе" value="<?php echo htmlspecialchars($this->params()->fromQuery('search_group')); ?>"/</td>
+		</form>
+	</tr>
+<?php foreach ($users as $user): ?>
+	
+  <tr>
+  	<td><?php echo htmlspecialchars($user['Email']); ?></td>
+  	<td><?php echo htmlspecialchars($user['LastName']); ?></td>
+  	<td><?php echo htmlspecialchars($user['FirstName']); ?></td>
+  	<td><?php echo htmlspecialchars($user['Login']); ?></td>
+  	<td><?php echo htmlspecialchars($user['User_ID']); ?></td>
+  	<td><!-- <div class="status"><?php if ($user['Checked'] == 1) 
+		  		{ 
+		  			echo '<img src="/img/switches/on.png" />'; 
+		  		} else { 
+		  			echo '<img src="/img/switches/off.png" />'; 
+		  		} ?></div> -->
+  		<a class="user_check" data-id="<?php echo $user['User_ID']; ?>" style="cursor:pointer;"><?php if ($user['Checked'] == 1) 
+	  			{ 
+	  				echo '<img src="/img/switches/on.png" />'; 
+	  			} else { 
+	  				echo '<img src="/img/switches/off.png" />'; 
+	  			}?></a></td>
+  	<td><a class="btn" href="/user/edit/<?php echo $user['User_ID']; ?>">Редактировать</a></td>
+  	<td><a class="btn" href="/user/password/<?php echo $user['User_ID']; ?>">Новый пароль</a></td>
+  	<td style="font-size: 12px"><?php foreach ($user['Groups'] as $group) {
+  		echo $group['PermissionGroup_ID'] .'. '.$group['PermissionGroup_Name'] . '<br />';
+  	} ?></td>
+  </tr>
+
+<?php endforeach; ?>
+</table>
+</div>
+<?php endif; ?>
+
+<?php echo $this->paginationControl($this->paginator,
+                                    'Sliding',
+                                    'osp/paginator.phtml', array('route' => 'list')); ?>
+
+<script>
+jQuery(document).ready(function() {
+$("input").keypress(function(event) {
+	    if (event.which == 13) {
+	        event.preventDefault();
+	        $(".search").submit();
+	    }
+	});
+
+	$('.user_check').click(function() {
+		var el = $(this);
+		$.get( "/user/control/" + $(this).attr('data-id'), function( data ) {
+			if (data == 'Пользователь выключен') {
+				el.find('img').attr("src","/img/switches/off.png");
+				el.parent().find('.status').html('Выключен');
+			}
+
+			if (data == 'Пользователь активирован') {
+				el.find('img').attr("src","/img/switches/on.png");
+				el.parent().find('.status').html('Активен');
+			}
+		});
+	})
+
+});
+</script>

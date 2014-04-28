@@ -1,0 +1,68 @@
+<?php 
+$get = $this->params()->fromQuery(); 
+$get_str = '';
+if (!empty($get)) {
+    foreach ($get as $param=>$value) {
+        if ($param != 'page') {
+            $get_str .= '&'.$param.'='.$value;
+        }
+        
+    }
+}
+?>
+
+<?php if ($this->pageCount): ?>
+     <div class="pagination pagination-centered">
+         <ul>
+             <!-- Previous page link -->
+             <?php if (isset($this->previous)): ?>
+                 <li>
+                     <a href="<?php echo $this->url($this->route); ?>?page=<?php echo $this->previous . $get_str; ?>">
+                         <<
+                     </a>
+                 </li>
+             <?php else: ?>
+                 <li class="disabled">
+                     <a href="#">
+                         <<
+                     </a>
+                 </li>
+             <?php endif; ?>
+
+             <!-- Numbered page links -->
+             <?php foreach ($this->pagesInRange as $page): ?>
+                 <?php if ($page != $this->current): ?>
+                     <li>
+                         <a href="<?php echo $this->url($this->route);?>?page=<?php echo $page . $get_str ; ?>">
+                             <?php echo $page; ?>
+                         </a>
+                     </li>
+                 <?php else: ?>
+                     <li class="active">
+                         <a href="#"><?php echo $page; ?></a>
+                     </li>
+                 <?php endif; ?>
+             <?php endforeach; ?>
+
+             <!-- Next page link -->
+             <?php if (isset($this->next)): ?>
+                 <li>
+                     <a href="<?php echo $this->url($this->route); ?>?page=<?php echo $this->next . $get_str; ?>">
+                         >>
+                     </a>
+                 </li>
+             <?php else: ?>
+                 <li class="disabled">
+                     <a href="#">
+                         >>
+                     </a>
+                 </li>
+             <?php endif; ?>
+         </ul>
+     </div>
+ <?php endif; ?>
+
+<?php if (!empty($get)) {
+    echo '<a href="/list">К началу списка пользователей</a><br />';
+}
+?>

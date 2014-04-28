@@ -1,0 +1,5 @@
+ApiController.php - пример API для создания новых пользователей. 
+ListCоntroller.php - пример контроллера страницы, выводящей таблицу с пользователями и ссылки на управление. 
+User.php - содержит функции getGroups(), getList(), которые используются в ListCоntroller.php.
+paginator.phtml - пагинатор для переходов по таблице пользователей
+list_index.phtml - отображения для файла ListCоntroller.php.
